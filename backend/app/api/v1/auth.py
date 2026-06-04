@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel
 
 from app.core.database import get_db
-from app.core.security import verify_password, create_access_token
+from app.core.security import verify_password, create_access_token, get_current_user
 from app.models.user import User
 
 router = APIRouter(prefix="/auth", tags=["Authentication"])
@@ -44,16 +44,13 @@ def login(
 
 @router.get("/me", response_model=UserInfo)
 def get_current_user_info(
-    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """Get current user information."""
-    from app.core.security import get_current_user
-
-    # This is a simplified version - in production use proper auth
     return {
-        "id": "demo-user",
-        "username": "demo",
-        "email": "demo@medimage.org",
-        "full_name": "Demo User",
-        "role": "admin",
+        "id": str(current_user.id),
+        "username": current_user.username,
+        "email": current_user.email,
+        "full_name": current_user.full_name,
+        "role": current_user.role,
     }

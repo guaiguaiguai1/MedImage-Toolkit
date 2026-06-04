@@ -8,7 +8,9 @@ from sqlalchemy.orm import Session
 from pydantic import BaseModel, Field
 
 from app.core.database import get_db
+from app.core.security import get_current_user
 from app.models.synthesis_task import SynthesisTask
+from app.models.user import User
 
 router = APIRouter(prefix="/synthesis", tags=["Synthesis"])
 
@@ -44,7 +46,11 @@ class TaskResponse(BaseModel):
 
 
 @router.post("/generate", response_model=TaskResponse)
-def generate_image(request: GenerateRequest, db: Session = Depends(get_db)):
+def generate_image(
+    request: GenerateRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Submit a new image synthesis task."""
     task = SynthesisTask(
         prompt=request.prompt,
@@ -96,7 +102,11 @@ def get_task(task_id: str, db: Session = Depends(get_db)):
 
 
 @router.delete("/tasks/{task_id}")
-def delete_task(task_id: str, db: Session = Depends(get_db)):
+def delete_task(
+    task_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Delete a synthesis task."""
     task = db.query(SynthesisTask).filter(SynthesisTask.id == task_id).first()
     if not task:
