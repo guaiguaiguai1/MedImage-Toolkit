@@ -11,12 +11,17 @@ from app.core.database import get_db
 from app.models.synthesis_task import SynthesisTask
 from app.models.dataset import Dataset
 from app.models.model import PretrainedModel
+from app.models.user import User
+from app.api.v1.auth import get_current_user
 
 router = APIRouter(prefix="/dashboard", tags=["Dashboard"])
 
 
 @router.get("/stats")
-def get_stats(db: Session = Depends(get_db)):
+def get_stats(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Get overview statistics for the dashboard."""
     total_tasks = db.query(func.count(SynthesisTask.id)).scalar() or 0
     completed_tasks = (
@@ -43,7 +48,10 @@ def get_stats(db: Session = Depends(get_db)):
 
 
 @router.get("/synthesis-trend")
-def get_synthesis_trend(db: Session = Depends(get_db)):
+def get_synthesis_trend(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Get synthesis task count trend for the last 30 days."""
     base_date = datetime.now()
     trend = []
@@ -60,7 +68,10 @@ def get_synthesis_trend(db: Session = Depends(get_db)):
 
 
 @router.get("/modality-distribution")
-def get_modality_distribution(db: Session = Depends(get_db)):
+def get_modality_distribution(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Get distribution of tasks by modality."""
     distribution = []
     for modality in ["CT", "MRI", "X-Ray"]:
@@ -77,7 +88,10 @@ def get_modality_distribution(db: Session = Depends(get_db)):
 
 
 @router.get("/quality-distribution")
-def get_quality_distribution(db: Session = Depends(get_db)):
+def get_quality_distribution(
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Get distribution of FID scores."""
     ranges = [
         {"range": "15-20", "min": 15, "max": 20},
@@ -104,7 +118,11 @@ def get_quality_distribution(db: Session = Depends(get_db)):
 
 
 @router.get("/recent-tasks")
-def get_recent_tasks(limit: int = 5, db: Session = Depends(get_db)):
+def get_recent_tasks(
+    limit: int = 5,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Get recent synthesis tasks."""
     tasks = (
         db.query(SynthesisTask)

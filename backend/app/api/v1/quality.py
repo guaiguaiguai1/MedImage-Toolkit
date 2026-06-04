@@ -2,8 +2,11 @@
 
 import random
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from pydantic import BaseModel
+
+from app.models.user import User
+from app.api.v1.auth import get_current_user
 
 router = APIRouter(prefix="/quality", tags=["Quality"])
 
@@ -19,7 +22,10 @@ class ModelComparisonRequest(BaseModel):
 
 
 @router.post("/evaluate")
-def evaluate_quality(request: QualityRequest):
+def evaluate_quality(
+    request: QualityRequest,
+    current_user: User = Depends(get_current_user),
+):
     """Calculate quality metrics for image sets."""
     return {
         "fid_score": round(random.uniform(15.0, 35.0), 2),
@@ -33,10 +39,13 @@ def evaluate_quality(request: QualityRequest):
 
 
 @router.post("/compare")
-def compare_models(request: ModelComparisonRequest):
+def compare_models(
+    request: ModelComparisonRequest,
+    current_user: User = Depends(get_current_user),
+):
     """Compare quality metrics across multiple models."""
     models_data = []
-    for i, model_id in enumerate(request.model_ids):
+    for model_id in request.model_ids:
         models_data.append({
             "model_id": model_id,
             "fid_score": round(random.uniform(15.0, 35.0), 2),
@@ -51,7 +60,9 @@ def compare_models(request: ModelComparisonRequest):
 
 
 @router.get("/trends")
-def get_quality_trends():
+def get_quality_trends(
+    current_user: User = Depends(get_current_user),
+):
     """Get quality metric trends over time."""
     from datetime import datetime, timedelta
 

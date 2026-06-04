@@ -6,6 +6,8 @@ from pydantic import BaseModel, Field
 
 from app.core.database import get_db
 from app.models.dataset import Dataset
+from app.models.user import User
+from app.api.v1.auth import get_current_user
 
 router = APIRouter(prefix="/datasets", tags=["Datasets"])
 
@@ -34,6 +36,7 @@ def list_datasets(
     skip: int = 0,
     limit: int = 50,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """List all datasets."""
     query = db.query(Dataset)
@@ -44,7 +47,11 @@ def list_datasets(
 
 
 @router.post("", response_model=dict)
-def create_dataset(data: DatasetCreate, db: Session = Depends(get_db)):
+def create_dataset(
+    data: DatasetCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Create a new dataset."""
     existing = db.query(Dataset).filter(Dataset.name == data.name).first()
     if existing:
@@ -57,7 +64,11 @@ def create_dataset(data: DatasetCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/{dataset_id}", response_model=dict)
-def get_dataset(dataset_id: str, db: Session = Depends(get_db)):
+def get_dataset(
+    dataset_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Get dataset by ID."""
     dataset = db.query(Dataset).filter(Dataset.id == dataset_id).first()
     if not dataset:
@@ -66,7 +77,12 @@ def get_dataset(dataset_id: str, db: Session = Depends(get_db)):
 
 
 @router.put("/{dataset_id}", response_model=dict)
-def update_dataset(dataset_id: str, data: DatasetUpdate, db: Session = Depends(get_db)):
+def update_dataset(
+    dataset_id: str,
+    data: DatasetUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Update a dataset."""
     dataset = db.query(Dataset).filter(Dataset.id == dataset_id).first()
     if not dataset:
@@ -79,7 +95,11 @@ def update_dataset(dataset_id: str, data: DatasetUpdate, db: Session = Depends(g
 
 
 @router.delete("/{dataset_id}")
-def delete_dataset(dataset_id: str, db: Session = Depends(get_db)):
+def delete_dataset(
+    dataset_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Delete a dataset."""
     dataset = db.query(Dataset).filter(Dataset.id == dataset_id).first()
     if not dataset:

@@ -6,6 +6,8 @@ from pydantic import BaseModel, Field
 
 from app.core.database import get_db
 from app.models.model import PretrainedModel
+from app.models.user import User
+from app.api.v1.auth import get_current_user
 
 router = APIRouter(prefix="/models", tags=["Models"])
 
@@ -26,6 +28,7 @@ def list_models(
     modality: str | None = None,
     status: str | None = None,
     db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
 ):
     """List all pretrained models."""
     query = db.query(PretrainedModel)
@@ -38,7 +41,11 @@ def list_models(
 
 
 @router.post("", response_model=dict)
-def create_model(data: ModelCreate, db: Session = Depends(get_db)):
+def create_model(
+    data: ModelCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Register a new pretrained model."""
     model = PretrainedModel(**data.model_dump())
     db.add(model)
@@ -48,7 +55,11 @@ def create_model(data: ModelCreate, db: Session = Depends(get_db)):
 
 
 @router.get("/{model_id}", response_model=dict)
-def get_model(model_id: str, db: Session = Depends(get_db)):
+def get_model(
+    model_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Get model by ID."""
     model = db.query(PretrainedModel).filter(PretrainedModel.id == model_id).first()
     if not model:
@@ -57,7 +68,12 @@ def get_model(model_id: str, db: Session = Depends(get_db)):
 
 
 @router.put("/{model_id}", response_model=dict)
-def update_model(model_id: str, data: ModelCreate, db: Session = Depends(get_db)):
+def update_model(
+    model_id: str,
+    data: ModelCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Update a pretrained model."""
     model = db.query(PretrainedModel).filter(PretrainedModel.id == model_id).first()
     if not model:
@@ -70,7 +86,11 @@ def update_model(model_id: str, data: ModelCreate, db: Session = Depends(get_db)
 
 
 @router.delete("/{model_id}")
-def delete_model(model_id: str, db: Session = Depends(get_db)):
+def delete_model(
+    model_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
     """Delete a pretrained model."""
     model = db.query(PretrainedModel).filter(PretrainedModel.id == model_id).first()
     if not model:
