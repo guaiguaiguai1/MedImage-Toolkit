@@ -6,52 +6,49 @@
 ![TypeScript](https://img.shields.io/badge/typescript-5.3-3178c6.svg)
 ![FastAPI](https://img.shields.io/badge/fastapi-0.109-009688.svg)
 
-**An open-source toolkit for medical image synthesis using diffusion models and ControlNet.**
+医学图像合成工具包 - 基于扩散模型和ControlNet的开源解决方案。
 
-MedImage Toolkit provides a complete platform for generating synthetic CT, MRI, and X-Ray images for AI model training, clinical education, and research applications. Built with modern web technologies and a focus on usability, quality evaluation, and reproducibility.
-
-![MedImage Toolkit](https://img.shields.io/badge/status-active-brightgreen.svg)
+这个工具包用于生成CT、MRI、X-Ray等医学图像，主要面向AI模型训练、临床教学和科研场景。前后端分离架构，支持批量生成和质量评估。
 
 ---
 
-## Features
+## 功能特性
 
-### Core Synthesis Engine
-- **Multi-Modality Support**: Generate CT, MRI (T1/T2), and X-Ray images
-- **ControlNet Integration**: Canny edge, segmentation mask, and depth map conditioning
-- **Batch Processing**: Generate multiple images with configurable parameters
-- **Quality Metrics**: Built-in FID, SSIM, and PSNR evaluation
+### 图像合成
+- 支持CT、MRI（T1/T2）、X-Ray多种模态
+- ControlNet条件控制（边缘检测、分割掩码、深度图）
+- 批量生成，可配置参数
+- 内置FID、SSIM、PSNR质量评估
 
-### Web Platform
-- **Interactive Dashboard**: Real-time statistics and synthesis trends
-- **Synthesis Workspace**: Configure and generate images with live preview
-- **Model Management**: Browse, compare, and select pretrained models
-- **Dataset Explorer**: Browse and manage medical imaging datasets
-- **Task History**: Track and review all synthesis operations
-- **Quality Analysis**: Compare model performance across metrics
+### Web平台
+- 实时统计面板
+- 可视化合成工作台
+- 模型管理和对比
+- 数据集浏览
+- 任务历史记录
+- 质量分析报表
 
-### Developer Experience
-- **REST API**: Full-featured FastAPI backend with OpenAPI documentation
-- **Python Library**: Use the synthesis engine directly in your scripts
-- **Docker Support**: One-command deployment with Docker Compose
-- **Type-Safe Frontend**: Built with TypeScript for reliability
+### 开发体验
+- FastAPI后端，自带OpenAPI文档
+- Python库可独立使用
+- Docker一键部署
+- TypeScript前端，类型安全
 
 ---
 
-## Quick Start
+## 快速开始
 
-### Prerequisites
+### 环境要求
 - Python 3.9+
 - Node.js 18+
-- npm or yarn
+- npm 或 yarn
 
-### Option 1: Python Library Only
+### 方式一：仅Python库
 
 ```bash
 pip install -e .
 
-# Use in Python
-from medimage_toolkit import SynthesisPipeline, QualityMetrics
+from medimage_toolkit import SynthesisPipeline
 
 pipeline = SynthesisPipeline()
 result = pipeline.generate(
@@ -61,65 +58,64 @@ result = pipeline.generate(
     guidance_scale=7.5
 )
 print(f"Generated {result.modality} image: {result.image.shape}")
-print(f"Generation time: {result.generation_time}s")
 ```
 
-### Option 2: Full Platform (Backend + Frontend)
+### 方式二：完整平台（前后端）
 
 ```bash
-# Backend
+# 后端
 cd backend
 pip install -r requirements.txt
 python -m app.main
-# API runs at http://localhost:8000
-# Docs at http://localhost:8000/docs
+# API: http://localhost:8000
+# 文档: http://localhost:8000/docs
 
-# Frontend (new terminal)
+# 前端（另开终端）
 cd frontend
 npm install
 npm run dev
-# UI runs at http://localhost:5173
+# 界面: http://localhost:5173
 ```
 
-### Option 3: Docker Compose
+### 方式三：Docker Compose
 
 ```bash
 docker-compose up --build
-# Frontend: http://localhost:3000
-# Backend API: http://localhost:8000
+# 前端: http://localhost:3000
+# 后端API: http://localhost:8000
 ```
 
-### Default Login
-- **Username**: `admin`
-- **Password**: `admin123`
+### 默认登录
+- 用户名: `admin`
+- 密码: `admin123`
 
 ---
 
-## Project Structure
+## 项目结构
 
 ```
 MedImage-Toolkit/
-├── medimage_toolkit/          # Python package
+├── medimage_toolkit/          # Python包
 │   ├── core/
-│   │   ├── pipeline.py        # Synthesis pipeline
-│   │   ├── condition.py       # Condition processing (Canny, Seg, Depth)
-│   │   └── quality.py         # Quality metrics (FID, SSIM, PSNR)
+│   │   ├── pipeline.py        # 合成流水线
+│   │   ├── condition.py       # 条件处理（边缘/分割/深度）
+│   │   └── quality.py         # 质量指标（FID/SSIM/PSNR）
 │   └── utils/
-│       └── config.py          # Configuration management
-├── backend/                   # FastAPI backend
+│       └── config.py          # 配置管理
+├── backend/                   # FastAPI后端
 │   ├── app/
-│   │   ├── api/v1/            # API endpoints
-│   │   ├── core/              # Config, database, security
-│   │   ├── models/            # SQLAlchemy models
-│   │   └── seed/              # Database seed data
+│   │   ├── api/v1/            # API接口
+│   │   ├── core/              # 配置、数据库、安全
+│   │   ├── models/            # SQLAlchemy模型
+│   │   └── seed/              # 种子数据
 │   ├── requirements.txt
 │   └── Dockerfile
-├── frontend/                  # React + TypeScript frontend
+├── frontend/                  # React + TypeScript前端
 │   ├── src/
-│   │   ├── pages/             # Page components
-│   │   ├── services/          # API client
-│   │   ├── stores/            # Zustand state management
-│   │   └── types/             # TypeScript types
+│   │   ├── pages/             # 页面组件
+│   │   ├── services/          # API客户端
+│   │   ├── stores/            # Zustand状态管理
+│   │   └── types/             # TypeScript类型
 │   ├── package.json
 │   └── Dockerfile
 ├── docker-compose.yml
@@ -129,60 +125,60 @@ MedImage-Toolkit/
 
 ---
 
-## API Reference
+## API接口
 
-### Authentication
+### 认证
 ```bash
 POST /api/v1/auth/login
 ```
 
-### Synthesis
+### 图像合成
 ```bash
-POST /api/v1/synthesis/generate     # Submit synthesis task
-GET  /api/v1/synthesis/tasks         # List tasks
-GET  /api/v1/synthesis/tasks/{id}    # Get task details
+POST /api/v1/synthesis/generate     # 提交合成任务
+GET  /api/v1/synthesis/tasks         # 任务列表
+GET  /api/v1/synthesis/tasks/{id}    # 任务详情
 ```
 
-### Models
+### 模型管理
 ```bash
-GET  /api/v1/models                  # List pretrained models
-GET  /api/v1/models/{id}             # Get model details
+GET  /api/v1/models                  # 模型列表
+GET  /api/v1/models/{id}             # 模型详情
 ```
 
-### Datasets
+### 数据集
 ```bash
-GET  /api/v1/datasets                # List datasets
-POST /api/v1/datasets                # Create dataset
+GET  /api/v1/datasets                # 数据集列表
+POST /api/v1/datasets                # 创建数据集
 ```
 
-### Quality
+### 质量评估
 ```bash
-POST /api/v1/quality/evaluate        # Evaluate quality metrics
-POST /api/v1/quality/compare         # Compare models
-GET  /api/v1/quality/trends          # Get quality trends
+POST /api/v1/quality/evaluate        # 评估质量指标
+POST /api/v1/quality/compare         # 模型对比
+GET  /api/v1/quality/trends          # 质量趋势
 ```
 
-### Dashboard
+### 仪表盘
 ```bash
-GET  /api/v1/dashboard/stats         # Overview statistics
+GET  /api/v1/dashboard/stats         # 统计概览
 GET  /api/v1/dashboard/synthesis-trend
 GET  /api/v1/dashboard/modality-distribution
 ```
 
-Full interactive documentation available at `/docs` when running the backend.
+完整API文档运行后端后访问 `/docs`。
 
 ---
 
-## Python Library Usage
+## Python库用法
 
-### Synthesis Pipeline
+### 合成流水线
 
 ```python
 from medimage_toolkit import SynthesisPipeline
 
 pipeline = SynthesisPipeline(model_name="stable-diffusion-med-v1")
 
-# Single image generation
+# 单张图像生成
 result = pipeline.generate(
     prompt="Brain MRI T1 with meningioma",
     modality="MRI",
@@ -190,7 +186,7 @@ result = pipeline.generate(
     guidance_scale=8.0
 )
 
-# Batch generation
+# 批量生成
 tasks = [
     {"prompt": "Liver CT", "modality": "CT"},
     {"prompt": "Chest X-Ray", "modality": "X-Ray", "steps": 30},
@@ -198,37 +194,36 @@ tasks = [
 results = pipeline.batch_generate(tasks)
 ```
 
-### Condition Processing
+### 条件处理
 
 ```python
 from medimage_toolkit import ConditionProcessor
-import numpy as np
 
 processor = ConditionProcessor()
 
-# Edge detection for structural conditioning
+# 边缘检测 - 用于结构条件控制
 edges = processor.process_canny(medical_image)
 
-# Segmentation mask for region-guided synthesis
+# 分割掩码 - 用于区域引导合成
 seg_mask = processor.process_segmentation(medical_image)
 
-# Depth map for 3D-aware generation
+# 深度图 - 用于3D感知生成
 depth = processor.process_depth(medical_image)
 ```
 
-### Quality Evaluation
+### 质量评估
 
 ```python
 from medimage_toolkit import QualityMetrics
 
 metrics = QualityMetrics()
 
-# Individual metrics
+# 单项指标
 fid = metrics.calculate_fid(real_images, generated_images)
 ssim = metrics.calculate_ssim(image1, image2)
 psnr = metrics.calculate_psnr(image1, image2)
 
-# Comprehensive evaluation
+# 综合评估
 report = metrics.evaluate_comprehensive(real_images, generated_images)
 print(f"Quality: {report.overall_quality}")
 print(f"FID: {report.fid_score}, SSIM: {report.ssim_score}")
@@ -236,7 +231,7 @@ print(f"FID: {report.fid_score}, SSIM: {report.ssim_score}")
 
 ---
 
-## Configuration
+## 配置
 
 ```python
 from medimage_toolkit.utils import ToolkitConfig
@@ -253,84 +248,75 @@ config.save("config.json")
 
 ---
 
-## Tech Stack
+## 技术栈
 
-| Layer | Technology |
-|-------|-----------|
-| Frontend | React 18, TypeScript, Vite, Ant Design, ECharts |
-| Backend | Python, FastAPI, SQLAlchemy, SQLite |
-| State | Zustand |
-| Styling | Ant Design tokens, CSS-in-JS |
-| Charts | Apache ECharts |
-| Auth | JWT (python-jose) |
-| Build | Vite, TypeScript compiler |
+| 层级 | 技术 |
+|------|------|
+| 前端 | React 18, TypeScript, Vite, Ant Design, ECharts |
+| 后端 | Python, FastAPI, SQLAlchemy, SQLite |
+| 状态管理 | Zustand |
+| 样式 | Ant Design tokens, CSS-in-JS |
+| 图表 | Apache ECharts |
+| 认证 | JWT (python-jose) |
+| 构建 | Vite, TypeScript compiler |
 
 ---
 
-## Contributing
+## 参与贡献
 
-Contributions are welcome! This is an open-source project and we welcome:
+欢迎提交bug报告、功能建议或代码贡献。
 
-1. **Bug Reports**: Open an issue describing the bug
-2. **Feature Requests**: Suggest new features or improvements
-3. **Code Contributions**: Submit a pull request
-
-### Development Setup
+### 开发环境搭建
 
 ```bash
-# Clone the repository
-git clone https://github.com/your-username/MedImage-Toolkit.git
+git clone https://github.com/guaiguaiguai1/MedImage-Toolkit.git
 cd MedImage-Toolkit
 
-# Install Python package in development mode
+# 安装Python包（开发模式）
 pip install -e .
 
-# Backend
+# 后端
 cd backend
 pip install -r requirements.txt
 python -m app.main
 
-# Frontend
+# 前端
 cd frontend
 npm install
 npm run dev
 ```
 
-### Code Style
-- Python: Follow PEP 8, use type hints
-- TypeScript: Strict mode enabled, follow ESLint rules
-- Commits: Use conventional commit messages
+### 代码规范
+- Python: PEP 8，使用类型注解
+- TypeScript: 严格模式，遵循ESLint规则
+- 提交信息: 使用约定式提交格式
 
 ---
 
-## License
+## 许可证
 
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
----
-
-## Acknowledgments
-
-- Inspired by the medical imaging research community
-- Built with [Stable Diffusion](https://github.com/CompVis/stable-diffusion) architecture concepts
-- Uses [ControlNet](https://github.com/lllyasviel/ControlNet) conditioning approaches
-- Medical imaging datasets from [LiTS](https://competitions.codalab.org/competitions/17094), [BraTS](https://www.med.upenn.edu/cbia/brats2023/), and [ChestX-ray14](https://nihcc.app.box.com/v/ChestXray-NIHCC)
+Apache License 2.0 - 详见 [LICENSE](LICENSE) 文件。
 
 ---
 
-## Citation
+## 致谢
 
-If you use MedImage Toolkit in your research, please cite:
+- 受医学影像研究社区启发
+- 基于 [Stable Diffusion](https://github.com/CompVis/stable-diffusion) 架构
+- 使用 [ControlNet](https://github.com/lllyasviel/ControlNet) 条件控制方法
+- 医学影像数据集来自 [LiTS](https://competitions.codalab.org/competitions/17094)、[BraTS](https://www.med.upenn.edu/cbia/brats2023/)、[ChestX-ray14](https://nihcc.app.box.com/v/ChestXray-NIHCC)
+
+---
+
+## 引用
+
+如果在研究中使用了MedImage Toolkit，请引用：
 
 ```bibtex
 @software{medimage_toolkit2024,
   title={MedImage Toolkit: Medical Image Synthesis Toolkit},
   author={MedImage Contributors},
   year={2024},
-  url={https://github.com/your-username/MedImage-Toolkit}
+  url={https://github.com/guaiguaiguai1/MedImage-Toolkit}
 }
 ```
-
----
-
-**Built for the medical imaging research community.**
