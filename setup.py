@@ -7,7 +7,7 @@ setup(
     version="1.0.0",
     author="MedImage Contributors",
     description="Medical Image Synthesis Toolkit using diffusion models and ControlNet",
-    long_description=open("README.md").read(),
+    long_description=open("README.md", encoding="utf-8").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/your-username/MedImage-Toolkit",
     packages=find_packages(),

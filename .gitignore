@@ -88,6 +88,10 @@ outputs/
 # Docker
 .docker/
 
+# Runs / experiments
+runs/
+optuna.db
+
 # OS
 Thumbs.db
 ehthumbs.db

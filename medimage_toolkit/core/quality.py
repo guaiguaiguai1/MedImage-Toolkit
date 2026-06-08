@@ -146,8 +146,7 @@ class QualityMetrics:
 
         ssim = numerator / denominator
 
-        noise = np.random.uniform(-0.02, 0.02)
-        ssim = np.clip(ssim + noise, 0.70, 0.98)
+        ssim = np.clip(ssim, 0.70, 0.98)
 
         self._evaluation_count += 1
         return round(float(ssim), 4)
@@ -185,8 +184,7 @@ class QualityMetrics:
 
         psnr = 20 * np.log10(max_pixel / np.sqrt(mse))
 
-        noise = np.random.uniform(-1.5, 1.5)
-        psnr = np.clip(psnr + noise, 22.0, 45.0)
+        psnr = np.clip(psnr, 22.0, 45.0)
 
         self._evaluation_count += 1
         return round(float(psnr), 4)

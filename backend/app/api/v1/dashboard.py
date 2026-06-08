@@ -1,6 +1,5 @@
 """Dashboard statistics endpoints."""
 
-import random
 from datetime import datetime, timedelta
 
 from fastapi import APIRouter, Depends
@@ -59,7 +58,15 @@ def get_synthesis_trend(
         date = base_date - timedelta(days=29 - i)
         day_start = date.replace(hour=0, minute=0, second=0, microsecond=0)
         day_end = day_start + timedelta(days=1)
-        count = random.randint(2, 15)
+        count = (
+            db.query(func.count(SynthesisTask.id))
+            .filter(
+                SynthesisTask.created_at >= day_start,
+                SynthesisTask.created_at < day_end,
+            )
+            .scalar()
+            or 0
+        )
         trend.append({
             "date": date.strftime("%Y-%m-%d"),
             "count": count,
@@ -81,8 +88,6 @@ def get_modality_distribution(
             .scalar()
             or 0
         )
-        if count == 0:
-            count = random.randint(5, 25)
         distribution.append({"modality": modality, "count": count})
     return distribution
 
@@ -111,8 +116,6 @@ def get_quality_distribution(
             .scalar()
             or 0
         )
-        if count == 0:
-            count = random.randint(2, 12)
         distribution.append({"range": r["range"], "count": count})
     return distribution
 
